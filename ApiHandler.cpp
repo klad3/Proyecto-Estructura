@@ -22,7 +22,6 @@ std::string GetBookInfo(const std::string& isbn) {
 
     // Construir la URL de la API con el código ISBN
     std::string apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" + isbn + "&maxResults=1&filter=partial&orderBy=relevance&printType=books";
-	//"https://openlibrary.org/search.json?q=" + isbn + "&fields=*,availability&limit=1&sort=new";
     
 
     // Abrir la conexión HTTP
