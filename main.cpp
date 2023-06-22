@@ -74,7 +74,7 @@ void registrarUsuario(string name, string email) {
     cout << "Usuario registrado exitosamente." << endl;
 }
 
-Book* buscarLibro(const string& title, Book* lista) { // TERMINADO 
+Book* buscarLibro(const string& title, Book*& lista) { // TERMINADO 
     Book* current = lista;
     while (current != nullptr) {
         if (current->title == title) {
@@ -96,67 +96,7 @@ User* obtenerUsuario(const string& email) {
     return nullptr;
 }
 
-void venderLibro(string title) { // En proceso
-	//TODO: añadir identificador de usuario
-    Book* libro = buscarLibro(title, head);
-    if (libro) {
-        if (libro->available) {
-            libro->stock -= 1;
-            cout << "Libro vendido exitosamente." << endl;
-        } else {
-            cout << "El libro no está disponible para la venta." << endl;
-        }
-    } else {
-        cout << "El libro no se encuentra en la biblioteca." << endl;
-    }
-}
 
-void prestarLibro(string title, string email) {
-
-	User* currentUser = obtenerUsuario(email);
-    Book* libro = buscarLibro(title, currentUser->books);
-    
-    if (currentUser != nullptr){
-	    if (libro) {
-	        if (libro->available) {
-	            libro->stock -= 1;
-	            cout << "Libro vendido exitosamente." << endl;
-	
-	            // Agregar el libro a la cola
-	            if (currentUser->books == nullptr) {
-	                currentUser->books = libro;
-	            } else {
-	                Book* current = currentUser->books;
-	                while (current->next != nullptr) {
-	                    current = current->next;
-	                }
-	                current->next = libro;
-	            }
-	        } else {
-	            cout << "El libro no está disponible para préstamo." << endl;
-	        }
-	    } else {
-	        cout << "El libro no se encuentra en la biblioteca." << endl;
-	    }
-	} else {
-		cout << "Usuario no encontrado." << endl;
-	}
-    
-}
-
-void devolverLibro(string title) {
-    Book* libro = buscarLibro(title, head);
-    if (libro) {
-        if (!libro->available) {
-            libro->available = true;
-            cout << "Libro devuelto exitosamente." << endl;
-        } else {
-            cout << "El libro no fue prestado." << endl;
-        }
-    } else {
-        cout << "El libro no se encuentra en la biblioteca." << endl;
-    }
-}
 
 void ordenarLibrosPorCategoria() {
     if (head == nullptr) {
@@ -453,12 +393,13 @@ void agregarLibro(string characterId) { // TERMINADO AL PARECER
         }
     }
 
-	Book* newBook = new Book(title, author, category, publishedDate, identifier, publisher, true);
-    anadirLibro(newBook, head);
-    anadirCatalogo(newBook, bookCatalogo);
+	Book* newBook1 = new Book(title, author, category, publishedDate, identifier, publisher, true);
+	Book* newBook2 = new Book(title, author, category, publishedDate, identifier, publisher, true);
+    anadirLibro(newBook1, head);
+    anadirCatalogo(newBook2, bookCatalogo);
 }
 
-void eliminarLibro(Book* bookToDelete, Book*& lista) { //EN PROCESO
+void eliminarLibro(Book*& bookToDelete, Book*& lista) { //EN PROCESO
     if (lista == nullptr) {
         cout << "La lista está vacía. No se puede eliminar ningún libro." << endl;
         return;
@@ -484,6 +425,75 @@ void eliminarLibro(Book* bookToDelete, Book*& lista) { //EN PROCESO
     current->next = current->next->next;
     delete bookToDelete;
     cout << "Libro eliminado exitosamente." << endl;
+}
+
+void venderLibro(string title) { // En proceso
+	//TODO: añadir identificador de usuario
+    
+    Book* libroCatalogo = buscarLibro(title, bookCatalogo);
+    cout<<"buscó en catalogo\n";
+    
+    cout<<"entró al libro != nullptr\n";
+    if (libroCatalogo->stock > 0) {
+        Book* libro = buscarLibro(title, head);
+        cout<<"buscó en head\n";
+        cout<<"entró al libroCatalogo->stock > 0\n";
+        libroCatalogo->stock -= 1;
+        anadirLibro(libro, vendidos);
+        eliminarLibro(libro, head);
+        cout << "Libro vendido exitosamente." << endl;
+    } else {
+        cout << "El libro no está disponible para la venta." << endl;
+    }
+}
+
+void prestarLibro(string title, string email) {
+
+	User* currentUser = obtenerUsuario(email);
+    Book* libro = buscarLibro(title, head);
+    
+    if (currentUser != nullptr){
+	    if (libro) {
+	        if (libro->available) {
+	            libro->stock -= 1;
+	            cout << "Libro vendido exitosamente." << endl;
+	
+	            // Agregar el libro a la cola
+	            if (currentUser->books == nullptr) {
+	                currentUser->books = libro;
+	                cout << "Libro añadido a cola de usuario." << endl;
+	            } else {
+	                Book* current = currentUser->books;
+	                while (current->next != nullptr) {
+	                    current = current->next;
+	                }
+	                current->next = libro;
+	                cout << "Libro añadido a cola de usuario." << endl;
+	            }
+	        } else {
+	            cout << "El libro no está disponible para préstamo." << endl;
+	        }
+	    } else {
+	        cout << "El libro no se encuentra en la biblioteca." << endl;
+	    }
+	} else {
+		cout << "Usuario no encontrado." << endl;
+	}
+    
+}
+
+void devolverLibro(string title) {
+    Book* libro = buscarLibro(title, head);
+    if (libro) {
+        if (!libro->available) {
+            libro->available = true;
+            cout << "Libro devuelto exitosamente." << endl;
+        } else {
+            cout << "El libro no fue prestado." << endl;
+        }
+    } else {
+        cout << "El libro no se encuentra en la biblioteca." << endl;
+    }
 }
 
 int main() {
