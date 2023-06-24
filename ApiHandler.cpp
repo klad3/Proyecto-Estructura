@@ -8,7 +8,7 @@
 
 #pragma comment(lib, "wininet.lib")
 
-std::string GetBookInfo(const std::string& isbn) {
+std::string GetBookInfo(const std::string& title) {
     HINTERNET hInternet, hConnect;
     DWORD bytesRead;
     char buffer[4096];
@@ -20,10 +20,8 @@ std::string GetBookInfo(const std::string& isbn) {
         return result;
     }
 
-    // Construir la URL de la API con el código ISBN
-    std::string apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" + isbn + "&maxResults=1&filter=partial&orderBy=relevance&printType=books";
+    std::string apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" + title + "&maxResults=1&filter=partial&orderBy=relevance&printType=books";
     
-
     // Abrir la conexión HTTP
     hConnect = InternetOpenUrlW(hInternet, std::wstring(apiUrl.begin(), apiUrl.end()).c_str(), NULL, 0, INTERNET_FLAG_RELOAD, 0);
     if (hConnect == NULL) {

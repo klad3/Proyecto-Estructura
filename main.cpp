@@ -2,6 +2,7 @@
 #include <string>
 #include <algorithm>
 #include <locale>
+#include <set>
 
 #include "ApiHandler.h"
 #include "include/rapidjson/document.h"
@@ -123,55 +124,6 @@ User* obtenerUsuario(const string& email) { //TERMINADO
         current = current->next;
     }
     return nullptr;
-}
-
-void ordenarLibrosPorCategoria() { //SIN REVISIÓN
-    if (head == nullptr) {
-        cout << "No hay libros registrados." << endl;
-        return;
-    }
-
-    // Crear listas enlazadas temporales para cada categoría
-    Book* categorizedBooks[10] = { nullptr };
-
-    // Recorrer la lista de libros y asignar cada libro a su lista enlazada correspondiente
-    Book* current = head;
-    while (current != nullptr) {
-        Book* nextBook = current->next;
-        current->next = nullptr;
-
-        int categoryIndex = current->category[0] - '0';
-        if (categoryIndex >= 0 && categoryIndex <= 9) {
-            if (categorizedBooks[categoryIndex] == nullptr) {
-                categorizedBooks[categoryIndex] = current;
-            } else {
-                Book* temp = categorizedBooks[categoryIndex];
-                while (temp->next != nullptr) {
-                    temp = temp->next;
-                }
-                temp->next = current;
-            }
-        }
-
-        current = nextBook;
-    }
-
-    // Mostrar los libros por categoría
-    for (int i = 0; i < 10; i++) {
-        cout << "Libros de la categoría " << i << ":" << endl;
-        if (categorizedBooks[i] == nullptr) {
-            cout << "No hay libros registrados en esta categoría." << endl;
-        } else {
-            Book* temp = categorizedBooks[i];
-            while (temp != nullptr) {
-                cout << "Título: " << temp->title << endl;
-                cout << "Autor: " << temp->author << endl;
-                cout << "Categoría: " << temp->category << endl;
-                cout << "-------------------------" << endl;
-                temp = temp->next;
-            }
-        }
-    }
 }
 
 void recomendarLibros() { //SIN REVISIÓN
@@ -504,10 +456,41 @@ void devolverLibro(string &mail) { //TERMINADO
     }
 }
 
+void ordenarLibrosPorCategoria() { //TERMINADO
+    if (bookCatalogo == nullptr) {
+        cout << "No hay libros registrados." << endl;
+        return;
+    }
+
+    set<string> categories;
+    Book* current = bookCatalogo;
+    while (current != nullptr) {
+        categories.insert(current->category);
+        current = current->next;
+    }
+
+    for (const string& category : categories) {
+        cout << "Categoría: " << category << endl;
+        cout << "Libros: ";
+
+        current = bookCatalogo;
+        while (current != nullptr) {
+            if (current->category == category) {
+                cout << "Título: " << current->title << endl;
+		        cout << "Autor: " << current->author << endl;
+		        cout << "ISBN: " << current->isbn << endl;
+		        cout << "-------------------------" << endl;
+            }
+            current = current->next;
+        }
+        cout << endl;
+    }
+}
+
 int main() {
 	setlocale(LC_ALL, "spanish");
     int opcion;
-    string name, email, title, author, category, characterId;
+    string name, email, title, author, category;
 
     do {
         mostrarMenu();
