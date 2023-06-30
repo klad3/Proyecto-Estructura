@@ -1,10 +1,4 @@
-// ApiHandler.cpp
-
-
 #include "ApiHandler.h"
-#include <windows.h>
-#include <wininet.h>
-#include <string>
 
 #pragma comment(lib, "wininet.lib")
 
@@ -20,8 +14,8 @@ std::string GetBookInfo(const std::string& title) {
         return result;
     }
 
-    std::string apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" + title + "&maxResults=1&filter=partial&orderBy=relevance&printType=books";
-    
+    std::string apiUrl = "https://www.googleapis.com/books/v1/volumes?q=" + title + "&maxResults=1&filter=partial&orderBy=relevance&printType=books&key=AIzaSyBCrojiHyyEqp-yz9EH1uTfc_AderSsVqQ";
+
     // Abrir la conexión HTTP
     hConnect = InternetOpenUrlW(hInternet, std::wstring(apiUrl.begin(), apiUrl.end()).c_str(), NULL, 0, INTERNET_FLAG_RELOAD, 0);
     if (hConnect == NULL) {
