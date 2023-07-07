@@ -6,6 +6,8 @@ Graph::arista::arista(nodo* dest) : destination(dest), next(nullptr) {}
 
 Graph::Graph() : vertices(nullptr) {}
 
+Graph::~Graph() {}
+
 void Graph::addVertex(Book* book) {
     nodo* newVertex = new nodo(book);
     newVertex->next = vertices;

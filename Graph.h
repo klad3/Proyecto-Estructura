@@ -5,7 +5,8 @@
 #include <vector>
 #include <string>
 
-struct Graph {
+class Graph {
+    public:
     struct arista;
     struct nodo {
         Book* book;
@@ -23,6 +24,7 @@ struct Graph {
     nodo* vertices;
 
     Graph();
+    ~Graph();
 
     void addVertex(Book* book);
     void addEdge(Book* source, Book* destination);

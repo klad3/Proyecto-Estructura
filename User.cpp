@@ -3,6 +3,8 @@
 User::User(const std::string& name, const std::string& email)
     : name(name), email(email), books(nullptr), next(nullptr) {}
 
+User::~User(){}
+
 void registrarUsuario(const std::string& name, const std::string& email, User*& usersHead) {
     User* newUser = new User(name, email);
     if (usersHead == nullptr) {
@@ -57,5 +59,41 @@ int contarUsuarios(User*& usersHead) {
     }
 
     return contador;
+}
+
+bool prestarLibro(std::string title, User*& user, Book*& bookCatalogo, Book*& head) { //TERMINADO
+    Book* libro = buscarLibro(title, head);
+    Book* libroCatalogo = buscarLibro(title, bookCatalogo);
+    if (libro) {
+        libroCatalogo->stock -= 1;
+        Book* currentBook = new Book(libro->title, libro->author, libro->category, libro->year, libro->isbn, libro->publisher, true);
+        eliminarLibro(libro, head);
+        encolarLibro(currentBook, user->books);
+        return true;
+    } else {
+        return false;
+    }
+}
+
+void devolverLibro(User*& user, Book*& bookCatalogo, Book*& head) { //TERMINADO
+        Book* bookCat = buscarLibro(user->books->title, bookCatalogo);
+        Book* currentBook = new Book(user->books->title, user->books->author, user->books->category, user->books->year, user->books->isbn, user->books->publisher, true);
+        eliminarLibro(user->books, user->books);
+        anadirLibro(currentBook, head);
+        bookCat->stock += 1;
+}
+
+bool venderLibro(std::string title, Book*& bookCatalogo, Book*& head, Book*& vendidos) { // TERMINADO AL PARECER
+    Book* libroCatalogo = buscarLibro(title, bookCatalogo);
+    if (libroCatalogo->stock > 0) {
+        libroCatalogo->stock -= 1;
+        libroCatalogo->sales += 1;
+        Book* libro = buscarLibro(title, head);
+        anadirLibro(libro, vendidos);
+        eliminarLibro(libro, head);
+        return true;
+    } else {
+        return false;
+    }
 }
 

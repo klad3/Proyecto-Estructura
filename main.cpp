@@ -35,24 +35,7 @@ void mostrarMenu() { // TERMINADO
     cout << "Ingrese una opción: ";
 }
 
-void encolar(Book* &nodo, Book* &cola) { //TERMINADO
-	Book* p = cola;
-	if(cola == nullptr)
-		cola = nodo;
-	else{
-		while(p->next != nullptr)
-			p = p->next;
-		p->next = nodo;
-	}
-}
-
-void desencolar(Book* &cola){ //TERMINADO
-	Book* p = cola;
-	cola = cola->next;
-	delete(p);
-}
-
-void verLista(Book* lista){ //TERMINADO
+void verLista(Book* lista){ // INSERVIBLE AL PARECER
     while (lista != nullptr) {
         cout << "Título: " << lista->title << endl;
         cout << "Autor: " << lista->author << endl;
@@ -62,36 +45,6 @@ void verLista(Book* lista){ //TERMINADO
         cout << "-------------------------" << endl;
         lista = lista->next;
     }
-}
-
-int contarLibros(Book* &head) { // TERMINADO
-    int contador = 0;
-    Book* actual = head;
-
-    while (actual != nullptr) {
-        contador++;
-        actual = actual->next;
-    }
-
-    return contador;
-}
-
-Book* obtenerLibroMasVendido() { //TERMINADO PROBABLEMENTE
-    if (bookCatalogo == nullptr) {
-        return nullptr;
-    }
-
-    Book* libroMasVendido = bookCatalogo;
-    Book* current = bookCatalogo->next;
-
-    while (current != nullptr) {
-        if (current->sales > libroMasVendido->sales) {
-            libroMasVendido = current;
-        }
-        current = current->next;
-    }
-
-    return libroMasVendido;
 }
 
 void mostrarLibrosDisponibles() { // TERMINADO
@@ -128,7 +81,7 @@ void mostrarReportes() { // FALTA
     cout << "Cantidad total de libros registrados: " << cantidadLibros << endl;
 
     // Reporte 2: Libro más vendido
-    Book* libroMasVendido = obtenerLibroMasVendido();
+    Book* libroMasVendido = obtenerLibroMasVendido(bookCatalogo);
     if (libroMasVendido != nullptr) {
         cout << "Libro más vendido:" << endl;
         cout << "Título: " << libroMasVendido->title << endl;
@@ -168,6 +121,7 @@ void mostrarReportes() { // FALTA
 
 void agregarLibro(string name) { // TERMINADO
     string bookInfo = GetBookInfo(name);
+
     string title, author, category, identifier, publishedDate, publisher;
 
     rapidjson::Document doc;
@@ -227,84 +181,6 @@ void agregarLibro(string name) { // TERMINADO
     anadirCatalogo(newBook2, bookCatalogo);
 }
 
-void eliminarLibro(Book*& bookToDelete, Book*& lista) { //TERMINADO
-    if (lista == nullptr) {
-        cout << "La lista está vacía. No se puede eliminar ningún libro." << endl;
-        return;
-    }
-
-    if (lista == bookToDelete) {
-        lista = lista->next;
-        delete bookToDelete;
-        cout << "Libro eliminado exitosamente." << endl;
-        return;
-    }
-
-    Book* current = lista;
-    while (current->next != nullptr && current->next != bookToDelete) {
-        current = current->next;
-    }
-
-    if (current->next == nullptr) {
-        cout << "El libro no se encontró en la lista." << endl;
-        return;
-    }
-
-    current->next = current->next->next;
-    delete bookToDelete;
-    cout << "Libro eliminado exitosamente." << endl;
-}
-
-void venderLibro(string title, Book*& bookCatalogo, Book*& head) { // TERMINADO AL PARECER
-
-    Book* libroCatalogo = buscarLibro(title, bookCatalogo);
-    if (libroCatalogo->stock > 0) {
-        libroCatalogo->stock -= 1;
-        libroCatalogo->sales += 1;
-        Book* libro = buscarLibro(title, head);
-        anadirLibro(libro, vendidos);
-        eliminarLibro(libro, head);
-        cout << "Libro vendido exitosamente." << endl;
-    } else {
-        cout << "El libro no está disponible para la venta." << endl;
-    }
-}
-
-void prestarLibro(string title, string &mail) { //TERMINADO
-	User* email = obtenerUsuario(mail, usersHead);
-    if (email != nullptr){
-    	Book* libro = buscarLibro(title, head);
-    	Book* libroCatalogo = buscarLibro(title, bookCatalogo);
-	    if (libro) {
-	        libroCatalogo->stock -= 1;
-	        Book* currentBook = new Book(libro->title, libro->author, libro->category, libro->year, libro->isbn, libro->publisher, true);
-	        eliminarLibro(libro, head);
-			encolar(currentBook, email->books);
-	        cout << "Libro prestado exitosamente." << endl;
-
-	    } else {
-	        cout << "El libro no se encuentra en la biblioteca." << endl;
-	    }
-	} else {
-		cout << "Usuario no encontrado." << endl;
-	}
-
-}
-
-void devolverLibro(string &mail) { //TERMINADO
-	User* email = obtenerUsuario(mail, usersHead);
-    if (email->books != nullptr) {
-        Book* bookCat = buscarLibro(email->books->title, bookCatalogo);
-        Book* currentBook = new Book(email->books->title, email->books->author, email->books->category, email->books->year, email->books->isbn, email->books->publisher, true);
-        eliminarLibro(email->books, email->books);
-        anadirLibro(currentBook, head);
-        bookCat->stock += 1;
-		cout << "Libro " << bookCatalogo->title << " devuelto exitosamente" << endl;
-    } else {
-        cout << "No hay libros prestados al usuario." << endl;
-    }
-}
-
 void ordenarLibrosPorCategoria() { //TERMINADO
     if (bookCatalogo == nullptr) {
         cout << "No hay libros registrados." << endl;
@@ -344,6 +220,7 @@ int main() {
     int opcion;
     string name, email, title, author, category;
     Graph graph;
+    User* user;
 	vector<string> recommendations;
 
     do {
@@ -385,27 +262,44 @@ int main() {
 			    cout << "Ingrese el título del libro a vender: ";
 			    cin.ignore();
 			    getline(cin, title);
-                venderLibro(title, bookCatalogo, head);
+			    if (venderLibro(title, bookCatalogo, head, vendidos)){
+                    cout << "Libro vendido exitosamente." << endl;
+			    } else {
+                    cout << "El libro no está disponible para la venta." << endl;
+			    }
                 system("PAUSE");
                 break;
             case 4:
 
-			    cout << "Ingrese el título del libro a prestar: ";
-			    cin.ignore();
-			    getline(cin, title);
 			    cout << "Ingrese el email del usuario: ";
+			    cin.ignore();
 			    getline(cin, email);
-	            prestarLibro(title, email);
+			    user = obtenerUsuario(email, usersHead);
+			    if (user) {
+			        cout << "Ingrese el título del libro a prestar: ";
+                    getline(cin, title);
+                    if (prestarLibro(title, user, bookCatalogo, head)) {
+                        cout << "Libro prestado exitosamente." << endl;
+                    } else {
+                        cout << "El libro no se encuentra en la biblioteca." << endl;
+                    }
+			    } else {
+                    cout << "Usuario no encontrado." << endl;
+			    }
 	            system("PAUSE");
                 break;
             case 5:
-
-			    cout << "Ingrese el título del libro a devolver: ";
-			    cin.ignore();
-			    getline(cin, title);
 			    cout << "Ingrese el email del usuario: ";
+			    cin.ignore();
 			    getline(cin, email);
-                devolverLibro(email);
+			    user = obtenerUsuario(email, usersHead);
+			    if (user->books != nullptr) {
+                    title = user->books->title;
+                    devolverLibro(user, bookCatalogo, head);
+                    cout << "Libro " << title << " devuelto exitosamente" << endl;
+			    } else {
+                    cout << "No hay libros prestados al usuario." << endl;
+                }
                 system("PAUSE");
                 break;
             case 6:
@@ -447,6 +341,8 @@ int main() {
                 break;
             case 0:
                 cout << "Saliendo del programa..." << endl;
+                guardarLibroEnArchivo(head, "head.json");
+        		guardarLibroEnArchivo(bookCatalogo, "bookCatalogo.json");
                 break;
             default:
                 cout << "Opción inválida. Intente nuevamente." << endl;
@@ -454,8 +350,6 @@ int main() {
                 break;
         }
         cout << endl;
-        guardarLibroEnArchivo(head, "head.json");
-        guardarLibroEnArchivo(bookCatalogo, "bookCatalogo.json");
     } while (opcion != 0);
 
     return 0;
