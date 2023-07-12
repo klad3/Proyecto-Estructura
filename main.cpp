@@ -98,16 +98,12 @@ void mostrarReportes() { // FALTA
     cout << "Libros prestados y no devueltos:" << endl;
     User* currentUser = usersHead;
 
-    //FALTA ARREGLAR
     for(int i = 0 ; i < cantidadUsuarios ; i++){
-    	while(currentUser->books->next != nullptr){
-    		cout << currentUser->books->title << endl;
-    		currentUser->books = currentUser->books->next;
+    	if (currentUser->books != nullptr){
+            mostrarLibrosPrestados(currentUser->email, usersHead);
 		}
-		cout << currentUser->books->title << endl;
 	    currentUser = currentUser->next;
 	}
-    //mostrarLibrosPrestados();
 
     // Reporte 4: Libros disponibles para la venta
     cout << "Libros disponibles para la venta:" << endl;

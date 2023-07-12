@@ -33,7 +33,7 @@ User* obtenerUsuario(const std::string& email, User*& usersHead) {
 void mostrarLibrosPrestados(const std::string& email, User*& usersHead) {
     User* usuario = obtenerUsuario(email, usersHead);
     if (usuario->books == nullptr) {
-        std::cout << "No hay libros registrados para este usuario." << std::endl;
+        std::cout << "No hay libros prestados para usuario: " << usuario->name << std::endl;
     } else {
         std::cout << "Libros prestados al usuario " << usuario->name << ":" << std::endl;
         Book* current = usuario->books;
@@ -64,7 +64,7 @@ int contarUsuarios(User*& usersHead) {
 bool prestarLibro(std::string title, User*& user, Book*& bookCatalogo, Book*& head) { //TERMINADO
     Book* libro = buscarLibro(title, head);
     Book* libroCatalogo = buscarLibro(title, bookCatalogo);
-    if (libro) {
+    if (libro != nullptr && libroCatalogo != nullptr) {
         libroCatalogo->stock -= 1;
         Book* currentBook = new Book(libro->title, libro->author, libro->category, libro->year, libro->isbn, libro->publisher, true);
         eliminarLibro(libro, head);
@@ -85,6 +85,9 @@ void devolverLibro(User*& user, Book*& bookCatalogo, Book*& head) { //TERMINADO
 
 bool venderLibro(std::string title, Book*& bookCatalogo, Book*& head, Book*& vendidos) { // TERMINADO AL PARECER
     Book* libroCatalogo = buscarLibro(title, bookCatalogo);
+    if (libroCatalogo == nullptr){
+        return false;
+    }
     if (libroCatalogo->stock > 0) {
         libroCatalogo->stock -= 1;
         libroCatalogo->sales += 1;
