@@ -212,6 +212,7 @@ int main() {
 	setlocale(LC_ALL, "Spanish");
 	cargarLibrosDesdeArchivo(head, "head.json");
 	cargarLibrosDesdeArchivo(bookCatalogo, "bookCatalogo.json");
+	cargarUsuariosDesdeArchivo(usersHead, "usersHead.json");
 
     int opcion;
     string name, email, title, author, category;
@@ -339,6 +340,7 @@ int main() {
                 cout << "Saliendo del programa..." << endl;
                 guardarLibroEnArchivo(head, "head.json");
         		guardarLibroEnArchivo(bookCatalogo, "bookCatalogo.json");
+        		guardarUsuariosEnArchivo(usersHead, "usersHead.json");
                 break;
             default:
                 cout << "Opción inválida. Intente nuevamente." << endl;
