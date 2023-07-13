@@ -89,13 +89,13 @@ void devolverLibro(User*& user, Book*& bookCatalogo, Book*& almacenLibros) {
 }
 
 bool venderLibro(std::string titulo, Book*& catalogoLibros, Book*& almacenLibros, Book*& vendidos) {
-    Book* catalogoLibros = buscarLibro(titulo, catalogoLibros);
-    if (catalogoLibros == nullptr){
+    Book* libroEnCatalogo = buscarLibro(titulo, catalogoLibros);
+    if (libroEnCatalogo == nullptr){
         return false;
     }
-    if (catalogoLibros->stock > 0) {
-        catalogoLibros->stock -= 1;
-        catalogoLibros->sales += 1;
+    if (libroEnCatalogo->stock > 0) {
+        libroEnCatalogo->stock -= 1;
+        libroEnCatalogo->sales += 1;
         Book* libro = buscarLibro(titulo, almacenLibros);
         anadirLibro(libro, vendidos);
         eliminarLibro(libro, almacenLibros);
