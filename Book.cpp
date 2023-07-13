@@ -1,12 +1,10 @@
 #include "Book.h"
 
-// Constructor de Book
 Book::Book(const std::string& title, const std::string& author, const std::string& category, const std::string& year, const std::string& isbn, const std::string& publisher, bool available)
     : title(title), author(author), category(category), year(year), isbn(isbn), publisher(publisher), available(available), sales(0), stock(1), next(nullptr) {}
 
 Book::~Book() {}
 
-// Función para buscar un libro por título
 Book* buscarLibro(const std::string& title, Book*& lista) {
     Book* currentBook = lista;
     while (currentBook != nullptr) {
@@ -15,11 +13,10 @@ Book* buscarLibro(const std::string& title, Book*& lista) {
         }
         currentBook = currentBook->next;
     }
-    return nullptr;  // Si no se encuentra el libro
+    return nullptr;
 }
 
-// Función para añadir un libro al catálogo
-void anadirCatalogo(Book* newBook, Book*& lista) { // TERMINADO
+void anadirCatalogo(Book* newBook, Book*& lista) {
 
 	Book* sameBook = buscarLibro(newBook->title, lista);
 
@@ -38,8 +35,7 @@ void anadirCatalogo(Book* newBook, Book*& lista) { // TERMINADO
 	}
 }
 
-// Función para añadir un libro a la lista
-void anadirLibro(Book* newBook, Book*& lista) { // TERMINADO
+void anadirLibro(Book* newBook, Book*& lista) {
 	if (lista == nullptr) {
 	    lista = newBook;
 	} else {
@@ -51,7 +47,7 @@ void anadirLibro(Book* newBook, Book*& lista) { // TERMINADO
 	}
 }
 
-int contarLibros(Book*& lista) { // TERMINADO
+int contarLibros(Book*& lista) {
     int contador = 0;
     Book* actual = lista;
 
@@ -63,7 +59,7 @@ int contarLibros(Book*& lista) { // TERMINADO
     return contador;
 }
 
-Book* obtenerLibroMasVendido(Book*& lista) { //TERMINADO PROBABLEMENTE
+Book* obtenerLibroMasVendido(Book*& lista) {
     if (lista == nullptr) {
         return nullptr;
     }
@@ -81,7 +77,7 @@ Book* obtenerLibroMasVendido(Book*& lista) { //TERMINADO PROBABLEMENTE
     return libroMasVendido;
 }
 
-void encolarLibro(Book* &nodo, Book* &cola) { //TERMINADO
+void encolarLibro(Book* &nodo, Book* &cola) {
 	Book* p = cola;
 	if(cola == nullptr)
 		cola = nodo;
@@ -94,14 +90,12 @@ void encolarLibro(Book* &nodo, Book* &cola) { //TERMINADO
 
 void eliminarLibro(Book*& bookToDelete, Book*& lista) { //TERMINADO
     if (lista == nullptr) {
-        //cout << "La lista está vacía. No se puede eliminar ningún libro." << endl;
         return;
     }
 
     if (lista == bookToDelete) {
         lista = lista->next;
         delete bookToDelete;
-        //cout << "Libro eliminado exitosamente." << endl;
         return;
     }
 
@@ -111,12 +105,10 @@ void eliminarLibro(Book*& bookToDelete, Book*& lista) { //TERMINADO
     }
 
     if (current->next == nullptr) {
-        //cout << "El libro no se encontró en la lista." << endl;
         return;
     }
 
     current->next = current->next->next;
     delete bookToDelete;
-    //cout << "Libro eliminado exitosamente." << endl;
 }
 

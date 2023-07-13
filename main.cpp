@@ -88,7 +88,7 @@ void mostrarReportes() { // FALTA
 
     for(int i = 0 ; i < cantidadUsuarios ; i++){
     	if (currentUser->books != nullptr){
-            mostrarLibrosPrestados(currentUser->email, usersHead);
+            mostrarLibrosPrestados(currentUser, usersHead);
 		}
 	    currentUser = currentUser->next;
 	}
@@ -218,7 +218,7 @@ int main() {
 			    getline(cin, name);
 			    cout << "Ingrese el email del usuario: ";
 			    getline(cin, email);
-			    if (obtenerUsuario(email, usersHead) != nullptr){
+			    if (obtenerUsuario(email, usersHead) == nullptr){
                     registrarUsuario(name, email, usersHead);
 			    } else {
                     cout << "El email ya fue registrado." << endl;
@@ -322,11 +322,15 @@ int main() {
                 system("PAUSE");
                 break;
             case 8:
-                cout << "Mostrando reportes:" << endl;
-			    cout << "Ingrese el nombre del usuario: ";
+			    cout << "Ingrese el email del usuario: ";
 				cin.ignore();
 				getline(cin, email);
-			    mostrarLibrosPrestados(email, usersHead);
+				user = obtenerUsuario(email, usersHead);
+				if (user == nullptr) {
+                    cout << "No se encontró al usuario." << endl;
+				} else {
+                    mostrarLibrosPrestados(user, usersHead);
+				}
 			    system("PAUSE");
                 break;
             case 9:

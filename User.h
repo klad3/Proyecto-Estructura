@@ -18,7 +18,7 @@ class User {
 
 void registrarUsuario(const std::string& name, const std::string& email, User*& usersHead);
 User* obtenerUsuario(const std::string& email, User*& usersHead);
-void mostrarLibrosPrestados(const std::string& email, User*& usersHead);
+void mostrarLibrosPrestados(User*& usuario, User*& usersHead);
 int contarUsuarios(User*& usersHead);
 bool verificarPrestamoMaximo(User*& user);
 bool prestarLibro(std::string title, User*& user, Book*& bookCatalogo, Book*& head);

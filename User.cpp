@@ -30,8 +30,7 @@ User* obtenerUsuario(const std::string& email, User*& usersHead) {
     return nullptr;
 }
 
-void mostrarLibrosPrestados(const std::string& email, User*& usersHead) {
-    User* usuario = obtenerUsuario(email, usersHead);
+void mostrarLibrosPrestados(User*& usuario, User*& usersHead) {
     if (usuario->books == nullptr) {
         std::cout << "No hay libros prestados para usuario: " << usuario->name << std::endl;
     } else {
@@ -41,8 +40,6 @@ void mostrarLibrosPrestados(const std::string& email, User*& usersHead) {
             std::cout << "Título: " << current->title << std::endl;
             std::cout << "Autor: " << current->author << std::endl;
             std::cout << "Categoría: " << current->category << std::endl;
-            std::cout << "ISBN: " << current->isbn << std::endl;
-            std::cout << "Stock: " << current->stock << std::endl;
             std::cout << "-------------------------" << std::endl;
             current = current->next;
         }
