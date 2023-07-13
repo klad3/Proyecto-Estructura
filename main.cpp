@@ -197,10 +197,10 @@ void ordenarLibrosPorCategoria() { //TERMINADO
 
 int main() {
 	setlocale(LC_ALL, "Spanish");
-	cargarLibrosDesdeArchivo(almacenLibros, "head.json");
-	cargarLibrosDesdeArchivo(catalogoLibros, "bookCatalogo.json");
+	cargarLibrosDesdeArchivo(almacenLibros, "almacenLibros.json");
+	cargarLibrosDesdeArchivo(catalogoLibros, "catalogoLibros.json");
 	cargarLibrosDesdeArchivo(librosVendidos, "vendidos.json");
-	cargarUsuariosDesdeArchivo(almacenUsuarios, "usersHead.json");
+	cargarUsuariosDesdeArchivo(almacenUsuarios, "usersalmacenLibros.json");
 
     int opcion;
     string name, email, title, author, category;
@@ -345,10 +345,10 @@ int main() {
                 system("PAUSE");
             case 0:
                 cout << "Saliendo del programa..." << endl;
-                guardarLibroEnArchivo(almacenLibros, "head.json");
-        		guardarLibroEnArchivo(catalogoLibros, "bookCatalogo.json");
+                guardarLibroEnArchivo(almacenLibros, "almacenLibros.json");
+        		guardarLibroEnArchivo(catalogoLibros, "catalogoLibros.json");
         		guardarLibroEnArchivo(librosVendidos, "vendidos.json");
-        		guardarUsuariosEnArchivo(almacenUsuarios, "usersHead.json");
+        		guardarUsuariosEnArchivo(almacenUsuarios, "usersalmacenLibros.json");
                 break;
             default:
                 cout << "Opción inválida. Intente nuevamente." << endl;

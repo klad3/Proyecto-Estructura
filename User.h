@@ -16,13 +16,13 @@ class User {
     ~User();
 };
 
-void registrarUsuario(const std::string& name, const std::string& email, User*& usersHead);
-User* obtenerUsuario(const std::string& email, User*& usersHead);
-void mostrarLibrosPrestados(User*& usuario, User*& usersHead);
-int contarUsuarios(User*& usersHead);
+void registrarUsuario(const std::string& name, const std::string& email, User*& almacenUsuarios);
+User* obtenerUsuario(const std::string& email, User*& almacenUsuarios);
+void mostrarLibrosPrestados(User*& usuario, User*& almacenUsuarios);
+int contarUsuarios(User*& almacenUsuarios);
 bool verificarPrestamoMaximo(User*& user);
-bool prestarLibro(std::string title, User*& user, Book*& bookCatalogo, Book*& head);
-void devolverLibro(User*& user, Book*& bookCatalogo, Book*& head);
-bool venderLibro(std::string title, Book*& bookCatalogo, Book*& head, Book*& vendidos);
+bool prestarLibro(std::string title, User*& user, Book*& catalogoLibros, Book*& almacenLibros);
+void devolverLibro(User*& user, Book*& catalogoLibros, Book*& almacenLibros);
+bool venderLibro(std::string title, Book*& catalogoLibros, Book*& almacenLibros, Book*& vendidos);
 
 #endif  // USER_H

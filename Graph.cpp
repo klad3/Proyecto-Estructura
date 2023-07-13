@@ -59,13 +59,13 @@ bool Graph::hasEdge(Book* source, Book* destination) {
     return false;
 }
 
-void Graph::conectarLibrosCatalogo(Book* bookCatalogo) {
-    for (Book* currentBook = bookCatalogo; currentBook != nullptr; currentBook = currentBook->next) {
+void Graph::conectarLibrosCatalogo(Book* catalogoLibros) {
+    for (Book* currentBook = catalogoLibros; currentBook != nullptr; currentBook = currentBook->next) {
         addVertex(currentBook);
     }
 
-    for (Book* currentBook = bookCatalogo; currentBook != nullptr; currentBook = currentBook->next) {
-        for (Book* neighborBook = bookCatalogo; neighborBook != nullptr; neighborBook = neighborBook->next) {
+    for (Book* currentBook = catalogoLibros; currentBook != nullptr; currentBook = currentBook->next) {
+        for (Book* neighborBook = catalogoLibros; neighborBook != nullptr; neighborBook = neighborBook->next) {
             if (neighborBook != currentBook && (currentBook->category == neighborBook->category)) {
                 addEdge(currentBook, neighborBook);
             }
@@ -81,10 +81,10 @@ Graph::arista* Graph::getNeighbors(Book* vertex) const {
     return nullptr;
 }
 
-std::vector<std::string> Graph::recomendarLibros(const std::string& bookTitle, Book* bookCatalogo) {
+std::vector<std::string> Graph::recomendarLibros(const std::string& bookTitle, Book* catalogoLibros) {
     std::vector<std::string> recommendations;
     Book* book = nullptr;
-    for (Book* currentBook = bookCatalogo; currentBook != nullptr; currentBook = currentBook->next) {
+    for (Book* currentBook = catalogoLibros; currentBook != nullptr; currentBook = currentBook->next) {
         if (currentBook->title == bookTitle) {
             book = currentBook;
             break;

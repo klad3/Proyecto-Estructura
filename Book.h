@@ -14,7 +14,7 @@ class Book {
     bool available;
     int sales;
     int stock;
-    struct Book* next;
+    Book* next;
 
     Book(const std::string& title, const std::string& author, const std::string& category, const std::string& year, const std::string& isbn, const std::string& publisher, bool available);
     ~Book();

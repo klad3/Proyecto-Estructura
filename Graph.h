@@ -30,9 +30,9 @@ class Graph {
     void addEdge(Book* source, Book* destination);
     void removeEdge(Book* source, Book* destination);
     bool hasEdge(Book* source, Book* destination);
-    void conectarLibrosCatalogo(Book* bookCatalogo);
+    void conectarLibrosCatalogo(Book* catalogoLibros);
     arista* getNeighbors(Book* vertex) const;
-    std::vector<std::string> recomendarLibros(const std::string& bookTitle, Book* bookCatalogo);
+    std::vector<std::string> recomendarLibros(const std::string& bookTitle, Book* catalogoLibros);
 
 
 private:
