@@ -88,7 +88,7 @@ void encolarLibro(Book* &nodo, Book* &cola) {
 	}
 }
 
-void eliminarLibro(Book*& bookToDelete, Book*& lista) { //TERMINADO
+void eliminarLibro(Book*& bookToDelete, Book*& lista) {
     if (lista == nullptr) {
         return;
     }
