@@ -99,3 +99,78 @@ void guardarLibroEnArchivo(const Book* libro, const std::string& archivo) {
         std::cout << "Error al abrir el archivo." << std::endl;
     }
 }
+
+void cargarUsuariosDesdeArchivo(User*& lista, const std::string& archivo) {
+    std::ifstream archivoEntrada(archivo);
+    if (archivoEntrada.is_open()) {
+        std::stringstream buffer;
+        buffer << archivoEntrada.rdbuf();
+        std::string contenidoArchivo = buffer.str();
+
+        rapidjson::Document document;
+        if (document.Parse(contenidoArchivo.c_str()).HasParseError()) {
+            std::cout << "Error al parsear el archivo JSON." << std::endl;
+            return;
+        }
+
+        if (!document.IsArray()) {
+            std::cout << "El archivo JSON debe contener un array de usuarios." << std::endl;
+            return;
+        }
+
+        for (const auto& usuario : document.GetArray()) {
+            if (!usuario.IsObject()) {
+                std::cout << "El archivo JSON contiene elementos no válidos." << std::endl;
+                return;
+            }
+
+            if (!usuario.HasMember("name") || !usuario["name"].IsString() ||
+                !usuario.HasMember("email") || !usuario["email"].IsString()) {
+                std::cout << "El archivo JSON contiene campos no válidos para un usuario." << std::endl;
+                return;
+            }
+
+            std::string name = usuario["name"].GetString();
+            std::string email = usuario["email"].GetString();
+
+            registrarUsuario(name, email, lista);
+        }
+
+        archivoEntrada.close();
+        std::cout << "Usuarios cargados desde el archivo exitosamente." << std::endl;
+    } else {
+        std::cout << "Error al abrir el archivo." << std::endl;
+    }
+}
+
+void guardarUsuariosEnArchivo(const User* lista, const std::string& archivo) {
+    rapidjson::Document document;
+    document.SetArray();
+
+    rapidjson::Document::AllocatorType& allocator = document.GetAllocator();
+
+    const User* current = lista;
+
+    while (current != nullptr) {
+        rapidjson::Value usuario(rapidjson::kObjectType);
+        usuario.AddMember("name", rapidjson::Value(current->name.c_str(), current->name.length(), allocator).Move(), allocator);
+        usuario.AddMember("email", rapidjson::Value(current->email.c_str(), current->email.length(), allocator).Move(), allocator);
+
+        document.PushBack(usuario, allocator);
+
+        current = current->next;
+    }
+
+    rapidjson::StringBuffer buffer;
+    rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+    document.Accept(writer);
+
+    std::ofstream archivoSalida(archivo);
+    if (archivoSalida.is_open()) {
+        archivoSalida << buffer.GetString();
+        archivoSalida.close();
+        std::cout << "Usuarios guardados en el archivo exitosamente." << std::endl;
+    } else {
+        std::cout << "Error al abrir el archivo." << std::endl;
+    }
+}

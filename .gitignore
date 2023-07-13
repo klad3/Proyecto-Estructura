@@ -5,7 +5,10 @@ Proyecto.exe
 Proyecto.layout
 .objs/
 Graph.h.gch
-Proyecto.cbp
 Proyecto.depend
 bookCatalogo.json
 head.json
+Graph.o
+User.o
+usersHead.json
+vendidos.json
