@@ -94,7 +94,6 @@ void mostrarReportes() {
 	}
 
     // Reporte 4: Libros disponibles para la venta
-    cout << "Libros disponibles para la venta:" << endl;
     mostrarLibrosDisponibles();
 
     // Reporte 5: Cantidad de usuarios registrados
