@@ -21,15 +21,15 @@ void mostrarMenu() {
 	system("CLS");
     cout << "========== Biblioteca ==========" << endl;
     cout << "1. Registrar usuario" << endl;
-    cout << "2. Buscar libro" << endl;
-    cout << "3. Vender libro" << endl;
-    cout << "4. Prestar libro" << endl;
-    cout << "5. Devolver libro" << endl;
-    cout << "6. Mostrar reportes" << endl;
-    cout << "7. Recomendar libros" << endl;
-    cout << "8. Mostrar libros prestados" << endl;
-    cout << "9. Añadir libro" << endl;
-    cout << "10. Ordenar libros por categoría" << endl;
+    cout << "2. Añadir libro" << endl;
+    cout << "3. Buscar libro" << endl;
+    cout << "4. Vender libro" << endl;
+    cout << "5. Prestar libro" << endl;
+    cout << "6. Devolver libro" << endl;
+    cout << "7. Mostrar libros prestados" << endl;
+    cout << "8. Recomendar libros" << endl;
+    cout << "9. Ordenar libros por categoría" << endl;
+    cout << "10. Mostrar reportes" << endl;
     cout << "0. Salir" << endl;
     cout << "=================================" << endl;
     cout << "Ingrese una opción: ";
@@ -63,7 +63,7 @@ void mostrarLibrosDisponibles() {
 }
 
 void mostrarReportes() {
-    cout << "Mostrando reportes:" << endl;
+    cout << "Mostrando reportes:" << endl << endl;
     // Reporte 1: Cantidad total de libros registrados
     int cantidadLibros = contarLibros(almacenLibros);
     cout << "Cantidad total de libros registrados: " << cantidadLibros << endl;
@@ -133,7 +133,7 @@ void agregarLibro(string name) {
                 const rapidjson::Value& categories = volumeInfo["categories"];
                 if (categories.Size() > 0 && categories[0].IsString()) {
                     category = categories[0].GetString();
-                    cout << "Categorï¿½a: " << category << endl;
+                    cout << "Categoría: " << category << endl;
                 }
             }
 
@@ -225,7 +225,14 @@ int main() {
 			    }
                 system("PAUSE");
                 break;
-            case 2: {
+            case 2:
+			    cout << "Ingrese el título del libro: ";
+			    cin.ignore();
+			    getline(cin, title);
+                agregarLibro(title);
+                system("PAUSE");
+                break;
+            case 3: {
                 cout << "Ingrese el título del libro a buscar en el catálogo: ";
                 cin.ignore();
                 getline(cin, title);
@@ -247,7 +254,7 @@ int main() {
                 system("PAUSE");
                 break;
             }
-            case 3:
+            case 4:
 			    cout << "Ingrese el título del libro a vender: ";
 			    cin.ignore();
 			    getline(cin, title);
@@ -258,8 +265,7 @@ int main() {
 			    }
                 system("PAUSE");
                 break;
-            case 4:
-
+            case 5:
 			    cout << "Ingrese el email del usuario: ";
 			    cin.ignore();
 			    getline(cin, email);
@@ -281,7 +287,7 @@ int main() {
 			    }
 	            system("PAUSE");
                 break;
-            case 5:
+            case 6:
 			    cout << "Ingrese el email del usuario: ";
 			    cin.ignore();
 			    getline(cin, email);
@@ -299,11 +305,19 @@ int main() {
 			    }
                 system("PAUSE");
                 break;
-            case 6:
-                mostrarReportes();
-                system("PAUSE");
-                break;
             case 7:
+			    cout << "Ingrese el email del usuario: ";
+				cin.ignore();
+				getline(cin, email);
+				user = obtenerUsuario(email, almacenUsuarios);
+				if (user == nullptr) {
+                    cout << "No se encontró al usuario." << endl;
+				} else {
+                    mostrarLibrosPrestados(user, almacenUsuarios);
+				}
+			    system("PAUSE");
+                break;
+            case 8:
                 cout << "Ingrese el título del libro: ";
                 cin.ignore();
                 getline(cin, title);
@@ -321,28 +335,13 @@ int main() {
                 }
                 system("PAUSE");
                 break;
-            case 8:
-			    cout << "Ingrese el email del usuario: ";
-				cin.ignore();
-				getline(cin, email);
-				user = obtenerUsuario(email, almacenUsuarios);
-				if (user == nullptr) {
-                    cout << "No se encontró al usuario." << endl;
-				} else {
-                    mostrarLibrosPrestados(user, almacenUsuarios);
-				}
-			    system("PAUSE");
-                break;
             case 9:
-			    cout << "Ingrese el título del libro: ";
-			    cin.ignore();
-			    getline(cin, title);
-                agregarLibro(title);
-                system("PAUSE");
-                break;
-            case 10:
                 ordenarLibrosPorCategoria();
                 system("PAUSE");
+            case 10:
+                mostrarReportes();
+                system("PAUSE");
+                break;
             case 0:
                 cout << "Saliendo del programa..." << endl;
                 guardarLibroEnArchivo(almacenLibros, "almacenLibros.json");
