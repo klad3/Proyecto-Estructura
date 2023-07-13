@@ -12,10 +12,10 @@
 
 using namespace std;
 
-Book* head = nullptr;
-Book* bookCatalogo = nullptr;
-Book* vendidos = nullptr;
-User* usersHead = nullptr;
+Book* almacenLibros = nullptr;
+Book* catalogoLibros = nullptr;
+Book* librosVendidos = nullptr;
+User* almacenUsuarios = nullptr;
 
 void mostrarMenu() { // TERMINADO
 	system("CLS");
@@ -32,17 +32,17 @@ void mostrarMenu() { // TERMINADO
     cout << "10. Ordenar libros por categoría" << endl;
     cout << "0. Salir" << endl;
     cout << "=================================" << endl;
-    cout << "Ingrese una opción: ";
+    cout << "Ingrese una opciï¿½n: ";
 }
 
 void mostrarLibrosDisponibles() { // TERMINADO
-    if (bookCatalogo == nullptr) {
+    if (catalogoLibros == nullptr) {
         cout << "No hay libros registrados." << endl;
         return;
     }
 	bool librosDisponibles = false;
     cout << "Libros disponibles para la venta o préstamo:" << endl;
-    Book* current = bookCatalogo;
+    Book* current = catalogoLibros;
 
     while (current != nullptr) {
         if (current->stock > 0) {
@@ -65,11 +65,11 @@ void mostrarLibrosDisponibles() { // TERMINADO
 void mostrarReportes() { // FALTA
     cout << "Mostrando reportes:" << endl;
     // Reporte 1: Cantidad total de libros registrados
-    int cantidadLibros = contarLibros(head);
+    int cantidadLibros = contarLibros(almacenLibros);
     cout << "Cantidad total de libros registrados: " << cantidadLibros << endl;
 
-    // Reporte 2: Libro más vendido
-    Book* libroMasVendido = obtenerLibroMasVendido(bookCatalogo);
+    // Reporte 2: Libro mï¿½s vendido
+    Book* libroMasVendido = obtenerLibroMasVendido(catalogoLibros);
     if (libroMasVendido != nullptr) {
         cout << "Libro más vendido:" << endl;
         cout << "Título: " << libroMasVendido->title << endl;
@@ -81,14 +81,14 @@ void mostrarReportes() { // FALTA
     }
 
 
-	int cantidadUsuarios = contarUsuarios(usersHead);
+	int cantidadUsuarios = contarUsuarios(almacenUsuarios);
     // Reporte 3: Libros prestados y no devueltos
     cout << "Libros prestados y no devueltos:" << endl;
-    User* currentUser = usersHead;
+    User* currentUser = almacenUsuarios;
 
     for(int i = 0 ; i < cantidadUsuarios ; i++){
     	if (currentUser->books != nullptr){
-            mostrarLibrosPrestados(currentUser, usersHead);
+            mostrarLibrosPrestados(currentUser, almacenUsuarios);
 		}
 	    currentUser = currentUser->next;
 	}
@@ -118,7 +118,7 @@ void agregarLibro(string name) { // TERMINADO
 
             if (volumeInfo.HasMember("title") && volumeInfo["title"].IsString()) {
                 title = volumeInfo["title"].GetString();
-                cout << "Título: " << title << endl;
+                cout << "Tï¿½tulo: " << title << endl;
             }
 
             if (volumeInfo.HasMember("authors") && volumeInfo["authors"].IsArray()) {
@@ -133,7 +133,7 @@ void agregarLibro(string name) { // TERMINADO
                 const rapidjson::Value& categories = volumeInfo["categories"];
                 if (categories.Size() > 0 && categories[0].IsString()) {
                     category = categories[0].GetString();
-                    cout << "Categoría: " << category << endl;
+                    cout << "Categorï¿½a: " << category << endl;
                 }
             }
 
@@ -161,18 +161,18 @@ void agregarLibro(string name) { // TERMINADO
     }
 	Book* newBook1 = new Book(title, author, category, publishedDate, identifier, publisher, true);
 	Book* newBook2 = new Book(title, author, category, publishedDate, identifier, publisher, true);
-    anadirLibro(newBook1, head);
-    anadirCatalogo(newBook2, bookCatalogo);
+    anadirLibro(newBook1, almacenLibros);
+    anadirCatalogo(newBook2, catalogoLibros);
 }
 
 void ordenarLibrosPorCategoria() { //TERMINADO
-    if (bookCatalogo == nullptr) {
+    if (catalogoLibros == nullptr) {
         cout << "No hay libros registrados." << endl;
         return;
     }
 
     set<string> categories;
-    Book* current = bookCatalogo;
+    Book* current = catalogoLibros;
     while (current != nullptr) {
         categories.insert(current->category);
         current = current->next;
@@ -182,7 +182,7 @@ void ordenarLibrosPorCategoria() { //TERMINADO
         cout << "-------------------------" << endl;
         cout << "Categoría: " << category << endl;
 
-        current = bookCatalogo;
+        current = catalogoLibros;
         while (current != nullptr) {
             if (current->category == category) {
                 cout << "Título: " << current->title << endl;
@@ -197,10 +197,10 @@ void ordenarLibrosPorCategoria() { //TERMINADO
 
 int main() {
 	setlocale(LC_ALL, "Spanish");
-	cargarLibrosDesdeArchivo(head, "head.json");
-	cargarLibrosDesdeArchivo(bookCatalogo, "bookCatalogo.json");
-	cargarLibrosDesdeArchivo(vendidos, "vendidos.json");
-	cargarUsuariosDesdeArchivo(usersHead, "usersHead.json");
+	cargarLibrosDesdeArchivo(almacenLibros, "head.json");
+	cargarLibrosDesdeArchivo(catalogoLibros, "bookCatalogo.json");
+	cargarLibrosDesdeArchivo(librosVendidos, "vendidos.json");
+	cargarUsuariosDesdeArchivo(almacenUsuarios, "usersHead.json");
 
     int opcion;
     string name, email, title, author, category;
@@ -218,8 +218,8 @@ int main() {
 			    getline(cin, name);
 			    cout << "Ingrese el email del usuario: ";
 			    getline(cin, email);
-			    if (obtenerUsuario(email, usersHead) == nullptr){
-                    registrarUsuario(name, email, usersHead);
+			    if (obtenerUsuario(email, almacenUsuarios) == nullptr){
+                    registrarUsuario(name, email, almacenUsuarios);
 			    } else {
                     cout << "El email ya fue registrado." << endl;
 			    }
@@ -230,7 +230,7 @@ int main() {
                 cin.ignore();
                 getline(cin, title);
 
-                Book* book = buscarLibro(title, bookCatalogo);
+                Book* book = buscarLibro(title, catalogoLibros);
                 if (book) {
                     cout << "Libro encontrado:" << endl;
                     cout << "Título: " << book->title << endl;
@@ -251,7 +251,7 @@ int main() {
 			    cout << "Ingrese el título del libro a vender: ";
 			    cin.ignore();
 			    getline(cin, title);
-			    if (venderLibro(title, bookCatalogo, head, vendidos)){
+			    if (venderLibro(title, catalogoLibros, almacenLibros, librosVendidos)){
                     cout << "Libro vendido exitosamente." << endl;
 			    } else {
                     cout << "El libro no está disponible para la venta." << endl;
@@ -263,18 +263,18 @@ int main() {
 			    cout << "Ingrese el email del usuario: ";
 			    cin.ignore();
 			    getline(cin, email);
-			    user = obtenerUsuario(email, usersHead);
+			    user = obtenerUsuario(email, almacenUsuarios);
 			    if (user) {
                     if (verificarPrestamoMaximo(user)) {
                         cout << "Ingrese el título del libro a prestar: ";
                         getline(cin, title);
-                        if (prestarLibro(title, user, bookCatalogo, head)) {
+                        if (prestarLibro(title, user, catalogoLibros, almacenLibros)) {
                             cout << "Libro prestado exitosamente." << endl;
                         } else {
                             cout << "El libro no se encuentra en la biblioteca." << endl;
                         }
                     } else {
-                        cout << "El usuario ha excedido los préstamos máximos." << endl;
+                        cout << "El usuario ha excedido los préstamos mínimos." << endl;
                     }
 			    } else {
                     cout << "Usuario no encontrado." << endl;
@@ -285,11 +285,11 @@ int main() {
 			    cout << "Ingrese el email del usuario: ";
 			    cin.ignore();
 			    getline(cin, email);
-			    user = obtenerUsuario(email, usersHead);
+			    user = obtenerUsuario(email, almacenUsuarios);
 			    if (user) {
                     if (user->books != nullptr) {
                         title = user->books->title;
-                        devolverLibro(user, bookCatalogo, head);
+                        devolverLibro(user, catalogoLibros, almacenLibros);
                         cout << "Libro " << title << " devuelto exitosamente" << endl;
                     } else {
                         cout << "No hay libros prestados al usuario." << endl;
@@ -308,8 +308,8 @@ int main() {
                 cin.ignore();
                 getline(cin, title);
 
-                graph.conectarLibrosCatalogo(bookCatalogo);
-                recommendations = graph.recomendarLibros(title, bookCatalogo);
+                graph.conectarLibrosCatalogo(catalogoLibros);
+                recommendations = graph.recomendarLibros(title, catalogoLibros);
 
                 if (recommendations.empty()) {
                     cout << "No se encontraron recomendaciones de libros para '" << title << "'." << endl;
@@ -325,11 +325,11 @@ int main() {
 			    cout << "Ingrese el email del usuario: ";
 				cin.ignore();
 				getline(cin, email);
-				user = obtenerUsuario(email, usersHead);
+				user = obtenerUsuario(email, almacenUsuarios);
 				if (user == nullptr) {
                     cout << "No se encontró al usuario." << endl;
 				} else {
-                    mostrarLibrosPrestados(user, usersHead);
+                    mostrarLibrosPrestados(user, almacenUsuarios);
 				}
 			    system("PAUSE");
                 break;
@@ -345,10 +345,10 @@ int main() {
                 system("PAUSE");
             case 0:
                 cout << "Saliendo del programa..." << endl;
-                guardarLibroEnArchivo(head, "head.json");
-        		guardarLibroEnArchivo(bookCatalogo, "bookCatalogo.json");
-        		guardarLibroEnArchivo(vendidos, "vendidos.json");
-        		guardarUsuariosEnArchivo(usersHead, "usersHead.json");
+                guardarLibroEnArchivo(almacenLibros, "head.json");
+        		guardarLibroEnArchivo(catalogoLibros, "bookCatalogo.json");
+        		guardarLibroEnArchivo(librosVendidos, "vendidos.json");
+        		guardarUsuariosEnArchivo(almacenUsuarios, "usersHead.json");
                 break;
             default:
                 cout << "Opción inválida. Intente nuevamente." << endl;
