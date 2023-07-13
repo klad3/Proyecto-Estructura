@@ -26,17 +26,17 @@ class Graph {
     Graph();
     ~Graph();
 
-    void addVertex(Book* book);
-    void addEdge(Book* source, Book* destination);
-    void removeEdge(Book* source, Book* destination);
-    bool hasEdge(Book* source, Book* destination);
+    void addNodo(Book* book);
+    void addArista(Book* source, Book* destination);
+    void removeArista(Book* source, Book* destination);
+    bool tieneArista(Book* source, Book* destination);
     void conectarLibrosCatalogo(Book* catalogoLibros);
     arista* getNeighbors(Book* vertex) const;
     std::vector<std::string> recomendarLibros(const std::string& bookTitle, Book* catalogoLibros);
 
 
 private:
-    nodo* findVertex(Book* book) const;
+    nodo* buscarNodo(Book* book) const;
 };
 
 #endif

@@ -17,7 +17,7 @@ Book* catalogoLibros = nullptr;
 Book* librosVendidos = nullptr;
 User* almacenUsuarios = nullptr;
 
-void mostrarMenu() { // TERMINADO
+void mostrarMenu() {
 	system("CLS");
     cout << "========== Biblioteca ==========" << endl;
     cout << "1. Registrar usuario" << endl;
@@ -32,10 +32,10 @@ void mostrarMenu() { // TERMINADO
     cout << "10. Ordenar libros por categoría" << endl;
     cout << "0. Salir" << endl;
     cout << "=================================" << endl;
-    cout << "Ingrese una opciï¿½n: ";
+    cout << "Ingrese una opción: ";
 }
 
-void mostrarLibrosDisponibles() { // TERMINADO
+void mostrarLibrosDisponibles() {
     if (catalogoLibros == nullptr) {
         cout << "No hay libros registrados." << endl;
         return;
@@ -62,13 +62,13 @@ void mostrarLibrosDisponibles() { // TERMINADO
     }
 }
 
-void mostrarReportes() { // FALTA
+void mostrarReportes() {
     cout << "Mostrando reportes:" << endl;
     // Reporte 1: Cantidad total de libros registrados
     int cantidadLibros = contarLibros(almacenLibros);
     cout << "Cantidad total de libros registrados: " << cantidadLibros << endl;
 
-    // Reporte 2: Libro mï¿½s vendido
+    // Reporte 2: Libro más vendido
     Book* libroMasVendido = obtenerLibroMasVendido(catalogoLibros);
     if (libroMasVendido != nullptr) {
         cout << "Libro más vendido:" << endl;
@@ -103,7 +103,7 @@ void mostrarReportes() { // FALTA
 
 }
 
-void agregarLibro(string name) { // TERMINADO
+void agregarLibro(string name) {
     string bookInfo = GetBookInfo(name);
 
     string title, author, category, identifier, publishedDate, publisher;
@@ -165,7 +165,7 @@ void agregarLibro(string name) { // TERMINADO
     anadirCatalogo(newBook2, catalogoLibros);
 }
 
-void ordenarLibrosPorCategoria() { //TERMINADO
+void ordenarLibrosPorCategoria() {
     if (catalogoLibros == nullptr) {
         cout << "No hay libros registrados." << endl;
         return;
@@ -200,7 +200,7 @@ int main() {
 	cargarLibrosDesdeArchivo(almacenLibros, "almacenLibros.json");
 	cargarLibrosDesdeArchivo(catalogoLibros, "catalogoLibros.json");
 	cargarLibrosDesdeArchivo(librosVendidos, "vendidos.json");
-	cargarUsuariosDesdeArchivo(almacenUsuarios, "usersalmacenLibros.json");
+	cargarUsuariosDesdeArchivo(almacenUsuarios, "almacenUsuarios.json");
 
     int opcion;
     string name, email, title, author, category;
@@ -348,7 +348,7 @@ int main() {
                 guardarLibroEnArchivo(almacenLibros, "almacenLibros.json");
         		guardarLibroEnArchivo(catalogoLibros, "catalogoLibros.json");
         		guardarLibroEnArchivo(librosVendidos, "vendidos.json");
-        		guardarUsuariosEnArchivo(almacenUsuarios, "usersalmacenLibros.json");
+        		guardarUsuariosEnArchivo(almacenUsuarios, "almacenUsuarios.json");
                 break;
             default:
                 cout << "Opción inválida. Intente nuevamente." << endl;

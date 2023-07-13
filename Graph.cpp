@@ -8,33 +8,33 @@ Graph::Graph() : vertices(nullptr) {}
 
 Graph::~Graph() {}
 
-void Graph::addVertex(Book* book) {
-    nodo* newVertex = new nodo(book);
-    newVertex->next = vertices;
-    vertices = newVertex;
+void Graph::addNodo(Book* book) {
+    nodo* newNodo = new nodo(book);
+    newNodo->next = vertices;
+    vertices = newNodo;
 }
 
-void Graph::addEdge(Book* source, Book* destination) {
-    nodo* sourceVertex = findVertex(source);
-    nodo* destinationVertex = findVertex(destination);
-    if (sourceVertex != nullptr && destinationVertex != nullptr) {
-        arista* newEdge = new arista(destinationVertex);
-        newEdge->next = sourceVertex->neighbors;
-        sourceVertex->neighbors = newEdge;
+void Graph::addArista(Book* source, Book* destination) {
+    nodo* inicioNodo = buscarNodo(source);
+    nodo* destinoNodo = buscarNodo(destination);
+    if (inicioNodo != nullptr && destinoNodo != nullptr) {
+        arista* newArista = new arista(destinoNodo);
+        newArista->next = inicioNodo->neighbors;
+        inicioNodo->neighbors = newArista;
     }
 }
 
-void Graph::removeEdge(Book* source, Book* destination) {
-    nodo* sourceVertex = findVertex(source);
-    if (sourceVertex != nullptr) {
+void Graph::removeArista(Book* source, Book* destination) {
+    nodo* inicioNodo = buscarNodo(source);
+    if (inicioNodo != nullptr) {
         arista* prevEdge = nullptr;
-        arista* currEdge = sourceVertex->neighbors;
+        arista* currEdge = inicioNodo->neighbors;
         while (currEdge != nullptr) {
             if (currEdge->destination->book == destination) {
                 if (prevEdge != nullptr) {
                     prevEdge->next = currEdge->next;
                 } else {
-                    sourceVertex->neighbors = currEdge->next;
+                    inicioNodo->neighbors = currEdge->next;
                 }
                 delete currEdge;
                 break;
@@ -45,10 +45,10 @@ void Graph::removeEdge(Book* source, Book* destination) {
     }
 }
 
-bool Graph::hasEdge(Book* source, Book* destination) {
-    nodo* sourceVertex = findVertex(source);
-    if (sourceVertex != nullptr) {
-        arista* currEdge = sourceVertex->neighbors;
+bool Graph::tieneArista(Book* source, Book* destination) {
+    nodo* inicioNodo = buscarNodo(source);
+    if (inicioNodo != nullptr) {
+        arista* currEdge = inicioNodo->neighbors;
         while (currEdge != nullptr) {
             if (currEdge->destination->book == destination) {
                 return true;
@@ -61,20 +61,20 @@ bool Graph::hasEdge(Book* source, Book* destination) {
 
 void Graph::conectarLibrosCatalogo(Book* catalogoLibros) {
     for (Book* currentBook = catalogoLibros; currentBook != nullptr; currentBook = currentBook->next) {
-        addVertex(currentBook);
+        addNodo(currentBook);
     }
 
     for (Book* currentBook = catalogoLibros; currentBook != nullptr; currentBook = currentBook->next) {
         for (Book* neighborBook = catalogoLibros; neighborBook != nullptr; neighborBook = neighborBook->next) {
             if (neighborBook != currentBook && (currentBook->category == neighborBook->category)) {
-                addEdge(currentBook, neighborBook);
+                addArista(currentBook, neighborBook);
             }
         }
     }
 }
 
 Graph::arista* Graph::getNeighbors(Book* vertex) const {
-    nodo* vertexNode = findVertex(vertex);
+    nodo* vertexNode = buscarNodo(vertex);
     if (vertexNode != nullptr) {
         return vertexNode->neighbors;
     }
@@ -102,7 +102,7 @@ std::vector<std::string> Graph::recomendarLibros(const std::string& bookTitle, B
     return recommendations;
 }
 
-Graph::nodo* Graph::findVertex(Book* book) const {
+Graph::nodo* Graph::buscarNodo(Book* book) const {
     nodo* current = vertices;
     while (current != nullptr) {
         if (current->book == book) {
