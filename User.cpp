@@ -66,7 +66,7 @@ bool verificarPrestamoMaximo(User*& user){
     }
 }
 
-bool prestarLibro(std::string title, User*& user, Book*& bookCatalogo, Book*& almacenLibros) { //TERMINADO
+bool prestarLibro(std::string title, User*& user, Book*& bookCatalogo, Book*& almacenLibros) {
     Book* libro = buscarLibro(title, almacenLibros);
     Book* libroCatalogo = buscarLibro(title, bookCatalogo);
     if (libro != nullptr && libroCatalogo != nullptr) {
@@ -80,7 +80,7 @@ bool prestarLibro(std::string title, User*& user, Book*& bookCatalogo, Book*& al
     }
 }
 
-void devolverLibro(User*& user, Book*& bookCatalogo, Book*& almacenLibros) { //TERMINADO
+void devolverLibro(User*& user, Book*& bookCatalogo, Book*& almacenLibros) {
         Book* bookCat = buscarLibro(user->books->title, bookCatalogo);
         Book* currentBook = new Book(user->books->title, user->books->author, user->books->category, user->books->year, user->books->isbn, user->books->publisher, true);
         eliminarLibro(user->books, user->books);
@@ -88,7 +88,7 @@ void devolverLibro(User*& user, Book*& bookCatalogo, Book*& almacenLibros) { //T
         bookCat->stock += 1;
 }
 
-bool venderLibro(std::string title, Book*& bookCatalogo, Book*& almacenLibros, Book*& vendidos) { // TERMINADO AL PARECER
+bool venderLibro(std::string title, Book*& bookCatalogo, Book*& almacenLibros, Book*& vendidos) {
     Book* libroCatalogo = buscarLibro(title, bookCatalogo);
     if (libroCatalogo == nullptr){
         return false;
