@@ -20,6 +20,7 @@ void registrarUsuario(const std::string& name, const std::string& email, User*& 
 User* obtenerUsuario(const std::string& email, User*& usersHead);
 void mostrarLibrosPrestados(const std::string& email, User*& usersHead);
 int contarUsuarios(User*& usersHead);
+bool verificarPrestamoMaximo(User*& user);
 bool prestarLibro(std::string title, User*& user, Book*& bookCatalogo, Book*& head);
 void devolverLibro(User*& user, Book*& bookCatalogo, Book*& head);
 bool venderLibro(std::string title, Book*& bookCatalogo, Book*& head, Book*& vendidos);

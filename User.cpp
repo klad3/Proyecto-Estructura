@@ -61,6 +61,14 @@ int contarUsuarios(User*& usersHead) {
     return contador;
 }
 
+bool verificarPrestamoMaximo(User*& user){
+    if (contarLibros(user->books) <= 4){
+        return true;
+    } else {
+        return false;
+    }
+}
+
 bool prestarLibro(std::string title, User*& user, Book*& bookCatalogo, Book*& head) { //TERMINADO
     Book* libro = buscarLibro(title, head);
     Book* libroCatalogo = buscarLibro(title, bookCatalogo);

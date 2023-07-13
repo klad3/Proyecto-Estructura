@@ -8,3 +8,6 @@ Graph.h.gch
 Proyecto.depend
 bookCatalogo.json
 head.json
+Graph.o
+User.o
+usersHead.json

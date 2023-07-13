@@ -34,6 +34,7 @@ class Graph {
     arista* getNeighbors(Book* vertex) const;
     std::vector<std::string> recomendarLibros(const std::string& bookTitle, Book* bookCatalogo);
 
+
 private:
     nodo* findVertex(Book* book) const;
 };

@@ -2,7 +2,6 @@
 #include <algorithm>
 #include <locale>
 #include <set>
-#include <queue>
 
 
 #include "ApiHandler.h"
@@ -26,25 +25,14 @@ void mostrarMenu() { // TERMINADO
     cout << "3. Vender libro" << endl;
     cout << "4. Prestar libro" << endl;
     cout << "5. Devolver libro" << endl;
-    cout << "6. Ordenar libros por categoría" << endl;
+    cout << "6. Mostrar reportes" << endl;
     cout << "7. Recomendar libros" << endl;
-    cout << "8. Mostrar reportes" << endl;
+    cout << "8. Mostrar libros prestados" << endl;
     cout << "9. Añadir libro" << endl;
+    cout << "10. Ordenar libros por categoría" << endl;
     cout << "0. Salir" << endl;
     cout << "=================================" << endl;
     cout << "Ingrese una opción: ";
-}
-
-void verLista(Book* lista){ // INSERVIBLE AL PARECER
-    while (lista != nullptr) {
-        cout << "Título: " << lista->title << endl;
-        cout << "Autor: " << lista->author << endl;
-        cout << "Categoría: " << lista->category << endl;
-        cout << "ISBN: " << lista->isbn << endl;
-        cout << "Stock: " << lista->stock << endl;
-        cout << "-------------------------" << endl;
-        lista = lista->next;
-    }
 }
 
 void mostrarLibrosDisponibles() { // TERMINADO
@@ -191,15 +179,14 @@ void ordenarLibrosPorCategoria() { //TERMINADO
     }
 
     for (const string& category : categories) {
+        cout << "-------------------------" << endl;
         cout << "Categoría: " << category << endl;
-        cout << "Libros: ";
 
         current = bookCatalogo;
         while (current != nullptr) {
             if (current->category == category) {
                 cout << "Título: " << current->title << endl;
 		        cout << "Autor: " << current->author << endl;
-		        cout << "ISBN: " << current->isbn << endl;
 		        cout << "-------------------------" << endl;
             }
             current = current->next;
@@ -212,6 +199,7 @@ int main() {
 	setlocale(LC_ALL, "Spanish");
 	cargarLibrosDesdeArchivo(head, "head.json");
 	cargarLibrosDesdeArchivo(bookCatalogo, "bookCatalogo.json");
+	cargarLibrosDesdeArchivo(vendidos, "vendidos.json");
 	cargarUsuariosDesdeArchivo(usersHead, "usersHead.json");
 
     int opcion;
@@ -230,7 +218,11 @@ int main() {
 			    getline(cin, name);
 			    cout << "Ingrese el email del usuario: ";
 			    getline(cin, email);
-                registrarUsuario(name, email, usersHead);
+			    if (obtenerUsuario(email, usersHead) != nullptr){
+                    registrarUsuario(name, email, usersHead);
+			    } else {
+                    cout << "El email ya fue registrado." << endl;
+			    }
                 system("PAUSE");
                 break;
             case 2: {
@@ -273,12 +265,16 @@ int main() {
 			    getline(cin, email);
 			    user = obtenerUsuario(email, usersHead);
 			    if (user) {
-			        cout << "Ingrese el título del libro a prestar: ";
-                    getline(cin, title);
-                    if (prestarLibro(title, user, bookCatalogo, head)) {
-                        cout << "Libro prestado exitosamente." << endl;
+                    if (verificarPrestamoMaximo(user)) {
+                        cout << "Ingrese el título del libro a prestar: ";
+                        getline(cin, title);
+                        if (prestarLibro(title, user, bookCatalogo, head)) {
+                            cout << "Libro prestado exitosamente." << endl;
+                        } else {
+                            cout << "El libro no se encuentra en la biblioteca." << endl;
+                        }
                     } else {
-                        cout << "El libro no se encuentra en la biblioteca." << endl;
+                        cout << "El usuario ha excedido los préstamos máximos." << endl;
                     }
 			    } else {
                     cout << "Usuario no encontrado." << endl;
@@ -290,13 +286,17 @@ int main() {
 			    cin.ignore();
 			    getline(cin, email);
 			    user = obtenerUsuario(email, usersHead);
-			    if (user->books != nullptr) {
-                    title = user->books->title;
-                    devolverLibro(user, bookCatalogo, head);
-                    cout << "Libro " << title << " devuelto exitosamente" << endl;
+			    if (user) {
+                    if (user->books != nullptr) {
+                        title = user->books->title;
+                        devolverLibro(user, bookCatalogo, head);
+                        cout << "Libro " << title << " devuelto exitosamente" << endl;
+                    } else {
+                        cout << "No hay libros prestados al usuario." << endl;
+                    }
 			    } else {
-                    cout << "No hay libros prestados al usuario." << endl;
-                }
+			        cout << "No se encontró al usuario." << endl;
+			    }
                 system("PAUSE");
                 break;
             case 6:
@@ -336,10 +336,14 @@ int main() {
                 agregarLibro(title);
                 system("PAUSE");
                 break;
+            case 10:
+                ordenarLibrosPorCategoria();
+                system("PAUSE");
             case 0:
                 cout << "Saliendo del programa..." << endl;
                 guardarLibroEnArchivo(head, "head.json");
         		guardarLibroEnArchivo(bookCatalogo, "bookCatalogo.json");
+        		guardarLibroEnArchivo(vendidos, "vendidos.json");
         		guardarUsuariosEnArchivo(usersHead, "usersHead.json");
                 break;
             default:
